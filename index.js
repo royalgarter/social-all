@@ -62,7 +62,7 @@ var init = function (urls) {
 		webview.addEventListener('loadredirect', handleLoad);
 	});
 }
-
+// https://mobile.twitter.com/home,https://www.reddit.com/,https://m.facebook.com/,https://www.youtube.com,
 onload = function() {
 	$('#txt-urls')[0].onchange = function(){
 		chrome.storage.sync.set({'#txt-urls': $('#txt-urls')[0].value}, function() {
