@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>WebView</title>
+	<link href="index.css" rel="stylesheet">
+</head>
+<body>
+	<div class="wv-tbl">
+	</div>
+
+	<div id="tpl-wv-cell" class="wv-cell" style="display:none;">
+		<div id="tpl-controls" class="controls">
+			<button class="btn-back" title="Go Back">&#9664;</button>
+			<button class="btn-forward" title="Go Forward">&#9654;</button>
+			<button class="btn-home" title="Go Home">&#8962;</button>
+			<button class="btn-reload" title="Reload">&#10227;</button>
+
+			<form class="form-location">
+				<div>
+					<input class="location" type="text" value="">
+				</div>
+				<input type="submit" value="Go">
+			</form>
+		</div>
+		<webview partition="persist:wv" autosize="true" src=""></webview>
+	</div>
+	<div id="footer" class="options">
+		<label>Seperated by comma between maximize 4 pages per tab & by semi colon between tabs</label>
+		<div>
+			<textarea id="txt-urls" wrap="off" cols="150" rows="2"></textarea>
+		</div>
+	</div>
+
+	<script src="index.js"></script>
+</body>
+</html>

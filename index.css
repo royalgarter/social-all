@@ -1,0 +1,94 @@
+html,body { 
+	height: 100%; 
+	margin: 0px; 
+	padding: 0px; 
+}
+
+webview {
+	border: 1px solid #999;
+}
+
+webview, appview {
+	display: inline-block;
+	width: 100%;
+	height: 100%;
+}
+
+.wv-tbl {
+	display: table;
+	width: 100%;
+	height: 80%;
+	table-layout: fixed;
+}
+
+.wv-cell {
+	display: table-cell;
+	vertical-align: top;
+	height: 100%;
+}
+
+.controls {
+	padding: 2px;
+	background-color: #eee;
+}
+
+.controls button,
+.controls input {
+	font-size: 14px;
+	line-height: 24px;
+	border-radius: 2px;
+	padding: 0 6px;
+}
+
+button,
+input[type="submit"],
+button[disabled]:hover {
+	border: solid 1px transparent;
+	background: transparent;
+}
+
+button:hover,
+input[type="submit"]:hover,
+button:focus,
+input[type="submit"]:focus {
+	border-color: #ccc;
+	background: -webkit-linear-gradient(bottom, #cccccc 0%, #f2f2f2 99%);
+}
+
+button:focus,
+input[type="submit"]:focus {
+	border-style: outset;
+}
+
+button:active,
+input[type="submit"]:active {
+	border-color: #bbb;
+	border-style: solid;
+	background: -webkit-linear-gradient(bottom, #e2e2e2 0%, #bbbbbb 99%);
+}
+
+.location {
+	border: solid 1px #ccc;
+	padding: 2px;
+	width: 100%;
+	-webkit-box-sizing: border-box;
+}
+
+.controls {
+	display: inline-block;
+	-webit-flex-direction: column;
+}
+
+.controls .form-location {
+	-webkit-flex: 1;
+	display: inline-flex;
+	-webit-flex-direction: column;
+}
+
+#footer {
+   position:absolute;
+   bottom:0;
+   width:100%;
+   height:70px;
+   padding: 5px;
+}
