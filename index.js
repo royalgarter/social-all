@@ -4,17 +4,43 @@ var $ = function(sel) {
 	return document.querySelectorAll(sel);
 };
 
-var init = function (urls) {
+var init = function (urls, tabIdx) {
 	if (!urls) return;
 
+	var tabHeadId = "tab-header-" + tabIdx;
+	var tabId = "tab-" + tabIdx;
+
+	var tabhead = document.createElement('button');
+	tabhead.setAttribute("id", tabHeadId);
+	tabhead.setAttribute("class", "tab-header");
+	tabhead.innerHTML = tabId;
+
+	$('#footer .tab-header')[0].appendChild(tabhead);
+	$('#footer .tab-header #tab-header-'+tabIdx)[0].addEventListener("click", function(){
+		console.log('click tabId', tabId);
+
+		var activeTabs = $('.wv-tbl.active');
+		for (var i = 0; i < activeTabs.length; i++) {
+			activeTabs[i].style.display = "none";
+			activeTabs[i].className = activeTabs[i].className.replace(" active", "");
+		}
+
+		$('#'+tabId)[0].style.display = "";
+		$('#'+tabId)[0].className += " active";
+	});
+
+	var tab = document.createElement('div');
+	tab.setAttribute("id", tabId);
+	tab.setAttribute("class", "wv-tbl");
+	$('body')[0].appendChild(tab);
+
 	var htmlTabTpl = $('#tpl-wv-cell')[0].outerHTML;
-	$('#tpl-wv-cell')[0].remove();
 
 	for (var i = 0; i < urls.length; i++) {
-		$('.wv-tbl')[0].innerHTML += htmlTabTpl;
+		$('#'+tabId)[0].innerHTML += htmlTabTpl;
 	}
 
-	$('.wv-cell').forEach(function(cell) {
+	$('#'+tabId+' .wv-cell').forEach(function(cell) {
 		var url = urls.pop();
 		var webview = cell.querySelector('webview');
 
@@ -53,7 +79,7 @@ var init = function (urls) {
 		var handleLoad = function (event) {
 			var url = event.newUrl || event.url;
 			if (!event.isTopLevel || !url) return;
-			console.log('url', url, JSON.stringify(event));
+			// console.log('url', url, JSON.stringify(event));
 			cell.querySelector('.location').value = url;
 		}
 
@@ -61,6 +87,8 @@ var init = function (urls) {
 		webview.addEventListener('loadstop', handleLoad);
 		webview.addEventListener('loadredirect', handleLoad);
 	});
+
+	$('#'+tabId)[0].style.display = "none";
 }
 // https://mobile.twitter.com/home,https://www.reddit.com/,https://m.facebook.com/,https://www.youtube.com,
 onload = function() {
@@ -71,11 +99,17 @@ onload = function() {
 	};
 
 	chrome.storage.sync.get('#txt-urls', function (obj) {
-        console.log('#txt-urls', obj['#txt-urls']);
+        // console.log('#txt-urls', obj['#txt-urls']);
         $('#txt-urls')[0].value = obj['#txt-urls'];
-        var tabs = obj['#txt-urls'].split(';');
-        var urls = tabs[0].split(',');
+        var tabs = obj['#txt-urls'].trim().split('\n');
 
-        init(urls);
+        for (var i = 0; i < tabs.length; i++) {
+        	var urls = tabs[i].trim().split(',');
+       		init(urls, i);
+       		// break;
+        }
+
+        $('#tpl-wv-cell')[0].remove();
+        $('#tab-header-0')[0].click();
     });
 }

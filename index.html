@@ -6,8 +6,8 @@
 	<link href="index.css" rel="stylesheet">
 </head>
 <body>
-	<div class="wv-tbl">
-	</div>
+<!-- 	<div class="wv-tbl">
+	</div> -->
 
 	<div id="tpl-wv-cell" class="wv-cell" style="display:none;">
 		<div id="tpl-controls" class="controls">
@@ -23,12 +23,14 @@
 				<input type="submit" value="Go">
 			</form>
 		</div>
-		<webview partition="persist:wv" autosize="true" src=""></webview>
+		<webview class="mywebview" partition="persist:wv" autosize="true" src=""></webview>
 	</div>
 	<div id="footer" class="options">
-		<label>Seperated by comma between maximize 4 pages per tab & by semi colon between tabs</label>
+		<div class="tab-header">
+			
+		</div>
 		<div>
-			<textarea id="txt-urls" wrap="off" cols="150" rows="2"></textarea>
+			<textarea id="txt-urls" wrap="off" cols="100" rows="2"></textarea>
 		</div>
 	</div>
 
