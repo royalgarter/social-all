@@ -133,7 +133,7 @@ var init = function (urls, tabIdx) {
 
 	$('#'+tabId)[0].style.display = "none";
 }
-// https://mobile.twitter.com/home,https://www.reddit.com/,https://m.facebook.com/,https://www.youtube.com,
+
 onload = function() {
 	$('#txt-urls')[0].onchange = function(){
 		chrome.storage.sync.set({'#txt-urls': $('#txt-urls')[0].value}, function() {
@@ -169,8 +169,16 @@ onload = function() {
 			$('#footer #txt-urls')[0].style.display = $('#footer #txt-urls')[0].style.display == 'none' ? '' : 'none';
 		});
 
-		$('#footer #tab-header-reload')[0].addEventListener("click", function(){
-			chrome.runtime.reload();
-		});
+		var wvs = $('.webview-tab');
+		for (var i = 0; i < wvs.length; i++) {
+			wvs[i].reload();
+		}
+
     });
 }
+
+/*
+https://twitter.com/home,https://www.reddit.com/,https://m.facebook.com/,https://plus.google.com/
+https://tinhte.vn/,https://vnexpress.net/
+https://coinmarketcap.com/,https://coins.live/news/
+*/
