@@ -49,7 +49,7 @@ webview, appview {
 }
 
 #footer .tab-header {
-	border-top: solid 1px #ddd
+	/*border-top: solid 1px #ddd*/
 }
 
 #footer .tab-header .active {
@@ -60,6 +60,16 @@ webview, appview {
 	padding: 2px;
 	background-color: #eee;
 	width: 100%;
+	display: inline-block;
+	-webit-flex-direction: column;
+	border: solid 1px #ddd;
+	border-bottom: 0;
+}
+
+.controls .form-location {
+	-webkit-flex: 1;
+	display: inline-flex;
+	-webit-flex-direction: column;
 }
 
 .controls button,
@@ -104,14 +114,5 @@ input[type="submit"]:active {
 	-webkit-box-sizing: border-box;
 }
 
-.controls {
-	display: inline-block;
-	-webit-flex-direction: column;
-}
 
-.controls .form-location {
-	-webkit-flex: 1;
-	display: inline-flex;
-	-webit-flex-direction: column;
-}
 

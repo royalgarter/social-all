@@ -2,20 +2,19 @@
 <html>
 <head>
 	<meta charset="utf-8">
-	<title>WebView</title>
+	<title>SocialAll</title>
 	<link href="index.css" rel="stylesheet">
 </head>
 <body>
 	<div id="tabs">
-
 	</div>
 
 	<div id="tpl-wv-cell" class="wv-cell" style="display:none;">
 		<div id="tpl-controls" class="controls">
-			<button class="btn-back" title="Go Back">&#9664;</button>
-			<button class="btn-forward" title="Go Forward">&#9654;</button>
-			<button class="btn-home" title="Go Home">&#8962;</button>
-			<button class="btn-reload" title="Reload">&#10227;</button>
+			<button class="btn-back" title="Go Back">&#9665;</button>
+			<button class="btn-forward" title="Go Forward">&#9655;</button>
+			<button class="btn-home" title="Go Home">&#9651;</button>
+			<button class="btn-reload" title="Reload">&#9676;</button>
 
 			<form class="form-location">
 				<div>
@@ -26,9 +25,13 @@
 		</div>
 		<webview class="webview-tab" partition="persist:wv" autosize="true" src=""></webview>
 	</div>
+	
 	<div id="footer" class="options">
 		<div class="tab-header">
-			<button id="tab-header-setting" class="tab-setting">Settings</button>
+			<div class="tab-setting">
+				<button id="tab-header-reload">&#10227;</button>
+				<button id="tab-header-setting">&#9881;</button>
+			</div>
 		</div>
 		<div>
 			<textarea id="txt-urls" wrap="off" cols="100" rows="2" style="display:none;"></textarea>

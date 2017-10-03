@@ -1,4 +1,7 @@
-var ua_mobile = 'Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1';
+var _UA_MOBILE = 'Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1';
+var _DEFAULT_SETTINGS = {
+	'#txt-urls': 'https://www.google.com/,http://www.bing.com/\nhttps://www.facebook.com/'
+}
 
 var $ = function(sel) {
 	return document.querySelectorAll(sel);
@@ -47,7 +50,7 @@ var init = function (urls, tabIdx) {
 	var tabhead = document.createElement('button');
 	tabhead.setAttribute("id", tabHeadId);
 	tabhead.setAttribute("class", "tab-header");
-	tabhead.innerHTML = tabId;
+	tabhead.innerHTML = "View " + (tabIdx+1);
 
 	$('#footer .tab-header')[0].appendChild(tabhead);
 	$('#footer .tab-header #tab-header-'+tabIdx)[0].addEventListener("click", function(){
@@ -89,7 +92,7 @@ var init = function (urls, tabIdx) {
 		cell.querySelector('.controls').setAttribute('style', '');
 		cell.querySelector('.location').setAttribute('value', url);
 		
-		webview.setUserAgentOverride(ua_mobile);
+		webview.setUserAgentOverride(_UA_MOBILE);
 		webview.src = url;
 
 		cell.querySelector('.btn-back').onclick = function() {
@@ -139,7 +142,12 @@ onload = function() {
 	};
 
 	chrome.storage.sync.get('#txt-urls', function (obj) {
-        // console.log('#txt-urls', obj['#txt-urls']);
+        if (!obj || !obj['#txt-urls']) {
+        	obj = _DEFAULT_SETTINGS;
+        	$('#txt-urls')[0].value = obj['#txt-urls'];
+        	$('#txt-urls')[0].onchange();
+        }
+
         $('#txt-urls')[0].value = obj['#txt-urls'];
         var tabs = obj['#txt-urls'].trim().split('\n');
 
@@ -152,13 +160,17 @@ onload = function() {
         $('#tpl-wv-cell')[0].remove();
         $('#tab-header-0')[0].click();
 
-        var wvs = $('.webview-tab');
+		var wvs = $('.webview-tab');
 		for (var i = 0; i < wvs.length; i++) {
 			wvs[i].addEventListener('newwindow', onNewWindow);
 		}
 
 		$('#footer #tab-header-setting')[0].addEventListener("click", function(){
 			$('#footer #txt-urls')[0].style.display = $('#footer #txt-urls')[0].style.display == 'none' ? '' : 'none';
+		});
+
+		$('#footer #tab-header-reload')[0].addEventListener("click", function(){
+			chrome.runtime.reload();
 		});
     });
 }
