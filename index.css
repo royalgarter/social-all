@@ -17,7 +17,7 @@ webview, appview {
 .wv-tbl {
 	display: table;
 	width: 100%;
-	height: 80%;
+	height: 100%;
 	table-layout: fixed;
 }
 
@@ -27,9 +27,39 @@ webview, appview {
 	height: 100%;
 }
 
+#tabs {
+	height: 100%;
+}
+
+#footer {
+	background-color: #eee;
+	position: fixed;
+	bottom: 0;
+	width: 100%;
+	padding: 0px 3px;
+}
+
+#footer textarea {
+	width: 99%;
+}
+
+#footer .tab-setting {
+	position: absolute;
+	right: 9px;
+}
+
+#footer .tab-header {
+	border-top: solid 1px #ddd
+}
+
+#footer .tab-header .active {
+	background-color: #aaa;
+}
+
 .controls {
 	padding: 2px;
 	background-color: #eee;
+	width: 100%;
 }
 
 .controls button,
@@ -52,7 +82,7 @@ input[type="submit"]:hover,
 button:focus,
 input[type="submit"]:focus {
 	border-color: #ccc;
-	background: -webkit-linear-gradient(bottom, #cccccc 0%, #f2f2f2 99%);
+	background: #ccc;
 }
 
 button:focus,
@@ -64,7 +94,7 @@ button:active,
 input[type="submit"]:active {
 	border-color: #bbb;
 	border-style: solid;
-	background: -webkit-linear-gradient(bottom, #e2e2e2 0%, #bbbbbb 99%);
+	background: #bbb;
 }
 
 .location {
@@ -85,13 +115,3 @@ input[type="submit"]:active {
 	-webit-flex-direction: column;
 }
 
-#footer {
-   position:absolute;
-   bottom:0;
-   width:100%;
-   height:70px;
-}
-
-#footer textarea {
-   width:99%;
-}

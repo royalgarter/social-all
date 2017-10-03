@@ -2,7 +2,11 @@
   "manifest_version": 2,
   "name": "Webview Sample",
   "version": "2.1",
-  "permissions": ["webview", "pointerLock", "geolocation", "videoCapture", "fullscreen", "storage"],
+  "permissions": ["webview", "pointerLock", "geolocation", "videoCapture", "fullscreen", "storage", "alarms", "notifications"],
+  "icons": { "16": "16.png",
+           "48": "48.png",
+          "128": "128.png",
+          "512": "512.png" },
   "app": {
     "background": {
       "scripts": ["main.js"]
