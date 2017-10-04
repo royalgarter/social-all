@@ -3,10 +3,6 @@ var _DEFAULT_SETTINGS = {
 	'#txt-urls': 'https://www.google.com/,http://www.bing.com/\nhttps://www.facebook.com/'
 }
 
-var DOM = function(sel) {
-	return document.querySelectorAll(sel);
-};
-
 var onNewWindow = function (event) {
 	// console.log("onNewWindow:", event.windowOpenDisposition);
 
@@ -52,43 +48,46 @@ var init = function (urls, tabIdx) {
 	tabhead.setAttribute("class", "tab-header");
 	tabhead.innerHTML = "View " + (tabIdx+1);
 
-	DOM('#footer .tab-header')[0].appendChild(tabhead);
-	DOM('#footer .tab-header #tab-header-'+tabIdx)[0].addEventListener("click", function(){
+	$('#footer .tab-header')[0].appendChild(tabhead);
+	$('#footer .tab-header #tab-header-'+tabIdx)[0].addEventListener("click", function(){
 		// console.log('click tabId', tabId);
 
-		var activeTabs = DOM('.wv-tbl.active');
+		var activeTabs = $('.wv-tbl.active');
 		for (var i = 0; i < activeTabs.length; i++) {
 			activeTabs[i].style.display = "none";
 			activeTabs[i].className = activeTabs[i].className.replace(" active", "");
 		}
 
-		var activeTabHeader = DOM('.tab-header.active');
+		var activeTabHeader = $('.tab-header.active');
 		for (var i = 0; i < activeTabHeader.length; i++) {
 			activeTabHeader[i].className = activeTabHeader[i].className.replace(" active", "");
 		}
 
-		DOM('#'+tabId)[0].style.display = "";
-		DOM('#'+tabId)[0].className += " active";
-		DOM('#'+tabHeadId)[0].className += " active";
+		$('#'+tabId)[0].style.display = "";
+		$('#'+tabId)[0].className += " active";
+		$('#'+tabHeadId)[0].className += " active";
 	});
 
 	var tab = document.createElement('div');
 	tab.setAttribute("id", tabId);
 	tab.setAttribute("class", "wv-tbl");
-	DOM('body #tabs')[0].appendChild(tab);
+	$('body #tabs')[0].appendChild(tab);
 
-	var htmlTabTpl = DOM('#tpl-wv-cell')[0].outerHTML;
+	var htmlTabTpl = $('#tpl-wv-cell')[0].outerHTML;
 
 	for (var i = 0; i < urls.length; i++) {
-		DOM('#'+tabId)[0].innerHTML += htmlTabTpl;
+		$('#'+tabId)[0].innerHTML += htmlTabTpl;
 	}
 
-	DOM('#'+tabId+' .wv-cell').forEach(function(cell) {
+	$('#'+tabId+' .wv-cell').toArray().forEach(function(cell) {
 		var url = urls.shift();
+
+		cell.setAttribute('style', '');
+		cell.setAttribute('id', '');
 
 		if (~url.search(/rss\:/i)) {
 			var feedUrl = url.replace(/rss\:/i, '');
-			console.log('feedUrl', feedUrl)
+			// console.log('feedUrl', feedUrl)
 
 			$.get(feedUrl, function (data) {
 				// console.log('data', data)
@@ -97,50 +96,88 @@ var init = function (urls, tabIdx) {
 
 				if (list.length == 0) list = $(data).find("entry");
 
-				// console.log('list', list.length)
-
 				list.each(function(i, val) { 
-					var $this = $(this);
+					var me = $(this);
 					var	item = {
-							title: $this.find("title").text(),
-							link: $this.find("link").text(),
-							description: $this.find("description").text(),
-							pubDate: $this.find("pubDate").text(),
-							author: $this.find("author").text(),
-							guid: $this.find("guid").text()
+						title: me.find("title").text(),
+						link: me.find("link").text() || me.find("link").attr('href'),
+						desc: me.find("description").text() || me.find("content").text(),
+						time: me.find("pubDate").text() || me.find("updated").text(),
+						author: me.find("author name").text() || me.find("author").text(),
+						guid: me.find("guid").text() ||  me.find("id").text()
 					};
+					// console.log(item.desc)
 					item.title = item.title.replace("<![CDATA[", "").replace("]]>", "");
+					// item.desc = item.desc.replace(/<img[^>]*>/ig, '');
+					item.desc = item.desc.replace(/<a[^>]*>/ig, '');
 
-					item.description = item.description.replace(/<img[^>]*>/ig, '');
-					item.description = item.description.replace(/<a[^>]*>/ig, '');
+					var desc = document.createElement('div');
+					desc.innerHTML = item.desc;
+					var imgs = desc.querySelectorAll('img');
 
-					var itemHTML = '<li><a href="' +item.guid +'">' +item.title +'</a>'+item.description+'</li>';
+					var done = function () {
+						var itemHTML = '<li><a href="' +item.link +'">' +item.title +'</a><i>&#10004;</i><br>'+desc.innerHTML+'</li>';
+						cell.querySelector('.feed').appendChild($(itemHTML)[0]);
+						cell.querySelectorAll('a').forEach(function(a) {
+							a.setAttribute('target', '_blank');
+						});
 
-					// console.log(itemHTML);
+						cell.querySelectorAll('.feed i').forEach(function(icon) {
+							var href = icon.parentNode.querySelector('a').getAttribute('href');
 
-					// $('#'+tabId+' .wv-cell .feed').append($(itemHTML));
-					cell.querySelector('.feed').appendChild($(itemHTML)[0]);
+							icon.onclick = function() {
+								var obj = {};obj[href] = new Date();
+								chrome.storage.local.set(obj, function () {});
+								icon.parentNode.setAttribute('style', 'display:none;');
+							};
+
+							chrome.storage.local.get(href, function (obj) {
+								if (!obj || !obj[href]) return;
+
+								icon.onclick();
+							});
+						});
+					}
+
+					var count = 0;
+					imgs.length == 0 ? done () : imgs.forEach(function (img) {
+						var xhr = new XMLHttpRequest();
+						xhr.responseType = 'blob';
+						xhr.onload = function() {
+							count++;
+							img.src = window.URL.createObjectURL(xhr.response);
+
+							img.setAttribute('class', (img.getAttribute('class') || '') + ' rss-item-img');
+
+							if (count == imgs.length) done()
+						}
+						xhr.open('GET', img.getAttribute('src'), true);
+						xhr.send();
+					});
 				});
 
-				cell.querySelector('.rss-content').insertBefore($('<a class="rss-title" href="'+feedUrl+'">'+feedUrl+'</a>')[0], cell.querySelector('ul'));
+				cell.querySelector('.rss-content').insertBefore($('<div class="rss-title"><a href="'+feedUrl+'">'+feedUrl+'</a></div>')[0], cell.querySelector('ul'));
 			});
 
-			cell.setAttribute('style', '');
-			cell.setAttribute('id', '');
+			
 			cell.querySelector('.webview-tab').setAttribute('style', 'display:none;');
 			cell.querySelector('.controls').setAttribute('style', 'display:none;');
 			cell.querySelector('.rss-content').setAttribute('style', '');
-
 		} else {
 			var webview = cell.querySelector('webview');
 
-			cell.setAttribute('style', '');
-			cell.setAttribute('id', '');
-			cell.querySelector('.controls').setAttribute('style', '');
-			cell.querySelector('.location').setAttribute('value', url);
+			var handleLoad = function (event) {
+				var url = event.newUrl || event.url;
+				if (!event.isTopLevel || !url) return;
+				// console.log('url', url, JSON.stringify(event));
+				cell.querySelector('.location').value = url;
+			}
 			
 			webview.setUserAgentOverride(_UA_MOBILE);
 			webview.src = url;
+			webview.addEventListener('loadstart', handleLoad);
+			webview.addEventListener('loadstop', handleLoad);
+			webview.addEventListener('loadredirect', handleLoad);
 
 			cell.querySelector('.btn-back').onclick = function() {
 				webview.back();
@@ -166,25 +203,17 @@ var init = function (urls, tabIdx) {
 				webview.src = cell.querySelector('.location').value;
 			};
 
-			var handleLoad = function (event) {
-				var url = event.newUrl || event.url;
-				if (!event.isTopLevel || !url) return;
-				// console.log('url', url, JSON.stringify(event));
-				cell.querySelector('.location').value = url;
-			}
-
-			webview.addEventListener('loadstart', handleLoad);
-			webview.addEventListener('loadstop', handleLoad);
-			webview.addEventListener('loadredirect', handleLoad);
+			cell.querySelector('.controls').setAttribute('style', '');
+			cell.querySelector('.location').setAttribute('value', url);
 		}
 	});
 
-	DOM('#'+tabId)[0].style.display = "none";
+	$('#'+tabId)[0].style.display = "none";
 }
 
 onload = function() {
-	DOM('#txt-urls')[0].onchange = function(){
-		chrome.storage.sync.set({'#txt-urls': DOM('#txt-urls')[0].value}, function() {
+	$('#txt-urls')[0].onchange = function(){
+		chrome.storage.sync.set({'#txt-urls': $('#txt-urls')[0].value}, function() {
 			// console.log('Settings saved');
 		});
 	};
@@ -192,11 +221,11 @@ onload = function() {
 	chrome.storage.sync.get('#txt-urls', function (obj) {
 		if (!obj || !obj['#txt-urls']) {
 			obj = _DEFAULT_SETTINGS;
-			DOM('#txt-urls')[0].value = obj['#txt-urls'];
-			DOM('#txt-urls')[0].onchange();
+			$('#txt-urls')[0].value = obj['#txt-urls'];
+			$('#txt-urls')[0].onchange();
 		}
 
-		DOM('#txt-urls')[0].value = obj['#txt-urls'];
+		$('#txt-urls')[0].value = obj['#txt-urls'];
 		var tabs = obj['#txt-urls'].trim().split('\n');
 
 		for (var i = 0; i < tabs.length; i++) {
@@ -205,19 +234,19 @@ onload = function() {
 			// break;
 		}
 
-		DOM('#tpl-wv-cell')[0].remove();
-		DOM('#tab-header-0')[0].click();
+		$('#tpl-wv-cell')[0].remove();
+		$('#tab-header-0')[0].click();
 
-		var wvs = DOM('.webview-tab');
+		var wvs = $('.webview-tab');
 		for (var i = 0; i < wvs.length; i++) {
 			wvs[i].addEventListener('newwindow', onNewWindow);
 		}
 
-		DOM('#footer #tab-header-setting')[0].addEventListener("click", function(){
-			DOM('#footer #txt-urls')[0].style.display = DOM('#footer #txt-urls')[0].style.display == 'none' ? '' : 'none';
+		$('#footer #tab-header-setting')[0].addEventListener("click", function(){
+			$('#footer #txt-urls')[0].style.display = $('#footer #txt-urls')[0].style.display == 'none' ? '' : 'none';
 		});
 
-		var wvs = DOM('.webview-tab');
+		var wvs = $('.webview-tab');
 		for (var i = 0; i < wvs.length; i++) {
 			wvs[i].reload();
 		}

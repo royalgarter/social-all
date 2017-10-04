@@ -33,6 +33,36 @@ webview, appview {
 	padding-bottom: 50px;
 }
 
+.feed i {
+	margin-left: 5px;
+}
+
+.feed i:hover,
+.feed i:focus {
+	color: #999;
+	cursor: pointer;
+}
+
+.feed li {
+	margin-top: 5px;
+}
+
+.feed li a {
+	line-height: 25px;
+}
+
+.rss-title {
+	text-align: center;
+	font-weight: bold;
+}
+
+.rss-item-img {
+    display: block;
+	border: solid 1px #999;
+	width: 50%;
+	height: auto;
+}
+
 #tabs {
 	height: 100%;
 }
@@ -60,6 +90,13 @@ webview, appview {
 
 #footer .tab-header .active {
 	background-color: #aaa;
+}
+
+.location {
+	border: solid 1px #ccc;
+	padding: 2px;
+	width: 100%;
+	-webkit-box-sizing: border-box;
 }
 
 .controls {
@@ -112,13 +149,3 @@ input[type="submit"]:active {
 	border-style: solid;
 	background: #bbb;
 }
-
-.location {
-	border: solid 1px #ccc;
-	padding: 2px;
-	width: 100%;
-	-webkit-box-sizing: border-box;
-}
-
-
-
