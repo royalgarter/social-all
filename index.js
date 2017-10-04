@@ -111,16 +111,18 @@ var init = function (urls, tabIdx) {
 					};
 					item.title = item.title.replace("<![CDATA[", "").replace("]]>", "");
 
-					item.description = item.description.replace(/<img.*\/img>/ig, '');
-					item.description = item.description.replace(/<a.*\/a>/ig, '');
+					item.description = item.description.replace(/<img[^>]*>/ig, '');
+					item.description = item.description.replace(/<a[^>]*>/ig, '');
 
 					var itemHTML = '<li><a href="' +item.guid +'">' +item.title +'</a>'+item.description+'</li>';
 
-					console.log(itemHTML);
+					// console.log(itemHTML);
 
 					// $('#'+tabId+' .wv-cell .feed').append($(itemHTML));
 					cell.querySelector('.feed').appendChild($(itemHTML)[0]);
 				});
+
+				cell.querySelector('.rss-content').insertBefore($('<a class="rss-title" href="'+feedUrl+'">'+feedUrl+'</a>')[0], cell.querySelector('ul'));
 			});
 
 			cell.setAttribute('style', '');
@@ -128,6 +130,7 @@ var init = function (urls, tabIdx) {
 			cell.querySelector('.webview-tab').setAttribute('style', 'display:none;');
 			cell.querySelector('.controls').setAttribute('style', 'display:none;');
 			cell.querySelector('.rss-content').setAttribute('style', '');
+
 		} else {
 			var webview = cell.querySelector('webview');
 
