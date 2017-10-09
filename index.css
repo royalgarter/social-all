@@ -56,6 +56,11 @@ webview, appview {
 	font-weight: bold;
 }
 
+.rss-head {
+	font-weight: bold;
+	font-size: 1.1em;
+}
+
 .rss-item-img {
     display: block;
 	border: solid 1px #999;
@@ -90,6 +95,10 @@ webview, appview {
 
 #footer .tab-header .active {
 	background-color: #aaa;
+}
+
+#footer button {
+	padding: 7px;
 }
 
 .location {
@@ -128,19 +137,22 @@ input[type="submit"],
 button[disabled]:hover {
 	border: solid 1px transparent;
 	background: transparent;
+	
 }
 
 button:hover,
 input[type="submit"]:hover,
 button:focus,
 input[type="submit"]:focus {
-	border-color: #ccc;
+	// border-color: #ccc;
 	background: #ccc;
+	outline: none;
 }
 
 button:focus,
 input[type="submit"]:focus {
 	border-style: outset;
+	outline: none;
 }
 
 button:active,

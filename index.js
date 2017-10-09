@@ -109,14 +109,14 @@ var init = function (urls, tabIdx) {
 					// console.log(item.desc)
 					item.title = item.title.replace("<![CDATA[", "").replace("]]>", "");
 					// item.desc = item.desc.replace(/<img[^>]*>/ig, '');
-					item.desc = item.desc.replace(/<a[^>]*>/ig, '');
+					// item.desc = item.desc.replace(/<a[^>]*>/ig, '');
 
 					var desc = document.createElement('div');
 					desc.innerHTML = item.desc;
 					var imgs = desc.querySelectorAll('img');
 
 					var done = function () {
-						var itemHTML = '<li><a href="' +item.link +'">' +item.title +'</a><i>&#10004;</i><br>'+desc.innerHTML+'</li>';
+						var itemHTML = '<li><a class="rss-head" href="' +item.link +'">' +item.title +'</a><i>&#10004;</i><br>'+desc.innerHTML+'</li>';
 						cell.querySelector('.feed').appendChild($(itemHTML)[0]);
 						cell.querySelectorAll('a').forEach(function(a) {
 							a.setAttribute('target', '_blank');
@@ -246,11 +246,9 @@ onload = function() {
 			$('#footer #txt-urls')[0].style.display = $('#footer #txt-urls')[0].style.display == 'none' ? '' : 'none';
 		});
 
-		var wvs = $('.webview-tab');
-		for (var i = 0; i < wvs.length; i++) {
-			wvs[i].reload();
-		}
-
+		$('#footer #tab-header-reload')[0].addEventListener("click", function(){
+			chrome.runtime.reload();
+		});
 	});
 }
 
@@ -259,5 +257,4 @@ rss:http://jquery-plugins.net/rss
 https://twitter.com/home,https://www.reddit.com/,https://m.facebook.com/
 https://tinhte.vn/,https://vnexpress.net/,https://plus.google.com/
 https://coinmarketcap.com/,https://coins.live/news/,https://coinmarketed.com/
-https://www.tradingview.com/chart/2aMvgAsq/#
 */
