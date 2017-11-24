@@ -3,7 +3,7 @@
 	"name": "SocialAll",
 	"version": "1.0",
 	"permissions": ["<all_urls>", "http://*/*", "https://*/*", "webview", "pointerLock", "geolocation", "videoCapture", "fullscreen", "storage", "alarms", "notifications"],
-	"icons": { "16": "16.png", "48": "48.png", "128": "128.png", "512": "512.png" },
+	"icons": { "16": "assets/16.png", "48": "assets/48.png", "128": "assets/128.png", "512": "assets/512.png" },
 	"key": "niplmhejichkojflihjjpkplbnldlfdp",
 	"app": {
 		"background": {
